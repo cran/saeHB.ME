@@ -1,0 +1,14 @@
+2f31b544fb0b68ce9394cfc1cfb9ae0e *DESCRIPTION
+07c5b326895c6f06a9120dd27b49185d *NAMESPACE
+c51271c0cbef31c3af2bf56227463482 *R/dataHBME.R
+edabe85070eb507b98f237557e3f08a7 *R/dataTMEHB.R
+6df7cf00cb6435949a9298c874d0743a *R/meHBNormal.R
+05cd784d489deb75caa86429ff33d368 *R/meHBt.R
+2ef7b011c7ffee26ccfe9431bdbe2fe1 *R/saeHB.ME.R
+f31f18b38965db0c01604055ccc73118 *data/dataHBME.rda
+4bb889090ae50442d14ea7befb9da1b3 *data/dataTMEHB.rda
+0ae8c4051f7e83d769ae8edd7eb8dd1f *man/dataHBME.Rd
+2e30c9c2c1660da9d12beea15d9ebc6d *man/dataTMEHB.Rd
+3e96fead892f1d51887128dee31ca6cb *man/meHBNormal.Rd
+8a63df27d5266bbbabc7ce2f353bca78 *man/meHBt.Rd
+ac7492bf8eb3bcfaad93479733df86da *man/saeHB.ME.Rd
