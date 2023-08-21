@@ -77,6 +77,9 @@ meHBNormal <- function(formula, vardir, var.x, coef, var.coef,
   tau.ua = tau.ub = 1
   c <- data[, var.x]
   c <- as.data.frame(c)
+  if(ncol(c) == 1){
+    names(c) = var.x
+  }
   n_c <- dim(c)[2]
   psi <- data[, vardir]
 
@@ -234,9 +237,9 @@ meHBNormal <- function(formula, vardir, var.x, coef, var.coef,
     formuladata <- cbind(formuladata, c)
     data_sampled <- na.omit(formuladata)
     psi_sampled <- data_sampled[, 2+p]
-    c_sampled <- data_sampled[, var.x]
+    c_sampled <- as.data.frame(data_sampled[, var.x])
     data_nonsampled <- formuladata[-data_sampled$idx,]
-    c_nonsampled <- data_nonsampled[, var.x]
+    c_nonsampled <- as.data.frame(data_nonsampled[, var.x])
     r <- data_nonsampled$idx
     m1 <- nrow(data_sampled)
     m2 <- nrow(data_nonsampled)

@@ -18,13 +18,11 @@
 #' @references Rao, J.N.K & Molina. (2015). Small Area Estimation 2nd Edition. New York: John Wiley and Sons, Inc <doi:10.1002/9781118735855>.
 #' @references Ybarra, L.M. and Lohr, S. L. (2008). Small area estimation when auxiliary information is measured with error. Biometrika 95, 919-931 <doi:10.1093/biomet/asn048>.
 #' @references Ntzoufras, I. (2009), Bayesian Modeling Using WinBUGS. 1st Edn., Wiley, New Jersey, ISBN-10: 1118210352.
-#' @docType package
-#' @name saeHB.ME
 #' @importFrom stringr str_replace_all
 #' @importFrom grDevices graphics.off
 #' @importFrom graphics par
 #' @import rjags
 #' @import coda
 #' @import stats
-NULL
+"_PACKAGE"
 

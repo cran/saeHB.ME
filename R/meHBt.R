@@ -80,6 +80,9 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
   c <- data[, var.x]
   c <- as.data.frame(c)
   n_c <- dim(c)[2]
+  if(ncol(c) == 1){
+    names(c) = var.x
+  }
   psi <- data[, vardir]
 
   if (!any(is.na(formuladata[,1]))){
@@ -267,9 +270,9 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
     formuladata <- cbind(formuladata, c)
     data_sampled <- na.omit(formuladata)
     psi_sampled <- data_sampled[, 2+p]
-    c_sampled <- data_sampled[, var.x]
+    c_sampled <- as.data.frame(data_sampled[, var.x])
     data_nonsampled <- formuladata[-data_sampled$idx,]
-    c_nonsampled <- data_nonsampled[, var.x]
+    c_nonsampled <- as.data.frame(data_nonsampled[, var.x])
     r <- data_nonsampled$idx
     m1 <- nrow(data_sampled)
     m2 <- nrow(data_nonsampled)
@@ -283,8 +286,7 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
                     tau.ua = tau.ua, tau.ub = tau.ub, tau.aa = tau.aa,
                     tau.ab = tau.ab, tau.ba = tau.ba, tau.bb = tau.bb,
                     phi.aa = phi.aa, phi.ab = phi.ab, phi.ba = phi.ba,
-                    phi.bb = phi.bb,
-                    vardir = psi_sampled, var.x = c_sampled,
+                    phi.bb = phi.bb, var.x = c_sampled,
                     var.x.T = c_nonsampled)  # names list of numbers
         inits <- list(u = rep(0,m1), b = mu.b, tau.u = tau.u)
 
@@ -294,7 +296,7 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
               mu[i] <- b[1] + sum(kjk[i,]) + sum(b[(n_c+2):p]*x_sampled[i,]) + u[i]
               u[i] ~ dnorm(0,tau.u)
               phi[i] ~ dgamma(phi.a, phi.b)
-              tau[i] ~ dgamma(tau.a, tau.b)
+              tau[i] ~ dgamma(tau.a, tau.tb)
 
               for (j in 1:(n_c)){
                 em[i,j] ~ dnorm(Xme_sampled[i,j],te[i,j])
@@ -314,14 +316,14 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
 					  mu.T[j]<- mu.b[1] + sum(kjk.T[j,]) + sum(mu.b[(n_c+2):p]*x_nonsampled[j,]) + v[j]
 					  v[j]~dnorm(0,tau.u)
 					  phi.T[j] ~ dgamma(phi.a, phi.b)
-					  tau.T[j] ~ dgamma(tau.a, tau.b)
-					  for(J in 1:(p-1)){
+					  tau.T[j] ~ dgamma(tau.a, tau.tb)
+					  for(J in 1:(n_c)){
 					    em.T[j,J] ~ dnorm(Xme_nonsampled[j,J], te.T[j,J])
 					  }
-					  for(I in 1:(p-1)){
+					  for(I in 1:(n_c)){
                 kjk.T[j,I] <- mu.b[I+1]*em.T[j,I]
               }
-					   for(G in 1:(p-1)){
+					   for(G in 1:(n_c)){
 					    te.T[j,G] <-  1/var.x.T[j,G]
 					  }
 					}
@@ -344,7 +346,7 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
 
         jags.m <- jags.model( file = "TME.txt", data=dat, inits=inits, n.chains=1, n.adapt=500)
         file.remove("TME.txt")
-        params <- c("mu","a.var","b", "phi.a","phi.b", "tau.a","tau.tb","tau.u")
+        params <- c("mu","mu.T","a.var","b", "phi.a","phi.b", "tau.a","tau.tb","tau.u")
         samps1 <- coda.samples( jags.m, params, n.iter=iter.mcmc, thin=thin)
         samps11 <- window(samps1, start=burn.in + 1, end=iter.mcmc)
 
@@ -355,7 +357,6 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
           mu.b[i]  = beta[i,1]
           tau.b[i] = 1/(beta[i,2]^2)
         }
-
         phi.aa = result_samps$statistics[2+p+m,1]^2/result_samps$statistics[2+p+m,2]^2
         phi.ab = result_samps$statistics[2+p+m,1]/result_samps$statistics[2+p+m,2]^2
         phi.ba = result_samps$statistics[(m + p + 3),1]^2/result_samps$statistics[(m + p + 3),2]^2
@@ -376,8 +377,7 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
                     tau.ua = tau.ua, tau.ub = tau.ub, tau.aa = tau.aa,
                     tau.ab = tau.ab, tau.ba = tau.ba, tau.bb = tau.bb,
                     phi.aa = phi.aa, phi.ab = phi.ab, phi.ba = phi.ba,
-                    phi.bb = phi.bb,
-                    vardir = psi_sampled, var.x = c_sampled,
+                    phi.bb = phi.bb, var.x = c_sampled,
                     var.x.T = c_nonsampled)  # names list of numbers
         inits <- list(u = rep(0,m1), b = mu.b, tau.u = tau.u)
 
@@ -387,7 +387,7 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
               mu[i] <- b[1] + sum(kjk[i,])+u[i]
               u[i] ~ dnorm(0,tau.u)
               phi[i] ~ dgamma(phi.a, phi.b)
-              tau[i] ~ dgamma(tau.a, tau.b)
+              tau[i] ~ dgamma(tau.a, tau.tb)
 
               for (j in 1:(p-1)){
                 em[i,j] ~ dnorm(x_sampled[i,j],te[i,j])
@@ -407,7 +407,7 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
 					  mu.T[j]<- mu.b[1] + sum(kjk.T[j,])+v[j]
 					  v[j]~dnorm(0,tau.u)
 					  phi.T[j] ~ dgamma(phi.a, phi.b)
-					  tau.T[j] ~ dgamma(tau.a, tau.b)
+					  tau.T[j] ~ dgamma(tau.a, tau.tb)
 					  for(J in 1:(p-1)){
 					    em.T[j,J] ~ dnorm(x_nonsampled[j,J], te.T[j,J])
 					  }
@@ -437,7 +437,7 @@ meHBt <- function(formula, vardir, var.x, coef, var.coef,
 
         jags.m <- jags.model( file = "TME.txt", data=dat, inits=inits, n.chains=1, n.adapt=500)
         file.remove("TME.txt")
-        params <- c("mu","a.var","b", "phi.a","phi.b", "tau.a","tau.tb","tau.u")
+        params <- c("mu","mu.T","a.var","b", "phi.a","phi.b", "tau.a","tau.tb","tau.u")
         samps1 <- coda.samples( jags.m, params, n.iter=iter.mcmc, thin=thin)
         samps11 <- window(samps1, start=burn.in + 1, end=iter.mcmc)
 

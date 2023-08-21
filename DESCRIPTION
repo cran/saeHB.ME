@@ -2,7 +2,7 @@ Package: saeHB.ME
 Type: Package
 Title: Small Area Estimation with Measurement Error using Hierarchical
         Bayesian Method
-Version: 1.0
+Version: 1.0.1
 Authors@R: 
     c(person("Azka Ubaidillah", role = "aut", email = "azka@stis.ac.id"),
       person("Muhammad Rifqi Mubarak", role = c("aut","cre"), email = "rifqi.mubarak@bps.go.id"))
@@ -12,11 +12,11 @@ Encoding: UTF-8
 LazyData: true
 Imports: coda, rjags, stringr
 Depends: R (>= 4.1)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2022-03-23 03:00:40 UTC; Sphere
+Packaged: 2023-08-21 00:52:22 UTC; user
 Author: Azka Ubaidillah [aut],
   Muhammad Rifqi Mubarak [aut, cre]
 Maintainer: Muhammad Rifqi Mubarak <rifqi.mubarak@bps.go.id>
 Repository: CRAN
-Date/Publication: 2022-03-23 12:30:05 UTC
+Date/Publication: 2023-08-21 04:00:02 UTC
